@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:名称空间;为映射文件指定一个唯一的路径-->
+<mapper namespace="Mapper.EmployeeMapper">
+    <resultMap id="EmployeeResultMap" type="ss">
+        <id property="id" column="id"></id>
+        <result property="empName" column="emp_name"/>
+        <result property="de.id" column="id"/>
+        <result column="dept_name" property="de.deptName"/>
+    </resultMap>
+    <!--
+        查询全部的员工。
+            id：唯一标识,标识映射文件中的sql,将来可以拿着这个唯一的标识进行查询
+            resultType：返回值类型,将数据库查询的结果映射到实体
+    -->
+    <select id="selectAllEmployees" resultMap="EmployeeResultMap">
+        select
+            id,emp_name,sex,email,birthday,address
+        from
+            t_employee
+    </select>
+   <select id="list" resultMap="EmployeeResultMap">
+        select
+            id,emp_name,sex,email,birthday,address
+        from
+            t_employee
+   </select>
+<insert id="add" parameterType="ss">
+insert into
+ t_employee(emp_name,sex,email,birthday,address)
+ value
+ (#{empName},#{sex},#{email},#{birthday},#{address})
+</insert>
+<delete id="del" parameterType="Integer">
+ delete from t_employee where id=#{id}
+</delete>
+    <update id="up" parameterType="ss">
+         update t_employee set emp_name=#{empName},sex=#{sex},email=#{email},birthday=#{birthday},address=#{address} where id=#{id}
+    </update>
+    <select id="li" resultMap="EmployeeResultMap">
+
+ select id,emp_name,sex,email,birthday,address from t_employee where emp_name like CONCAT('%',#{empName},'%')
+    </select>
+    <select id="byidandname" resultMap="EmployeeResultMap">
+select id,emp_name,sex,email,birthday,address from t_employee where id=#{arg0} and emp_name=#{arg1}
+
+    </select>
+    <select id="selectbyIdname" resultMap="EmployeeResultMap">
+        select * from t_employee where id=#{byid} and emp_name=#{byname}
+    </select>
+    <select id="selectbyidSu" resultMap="EmployeeResultMap">
+         select  id,emp_name,sex,email,birthday,address from t_employee where id=#{list[0]}
+
+    </select>
+    <select id="selectbysz" resultMap="EmployeeResultMap">
+        select id,emp_name,sex,email,birthday,address from t_employee where id=#{array[0]}
+    </select>
+    <select id="sect" resultMap="EmployeeResultMap">
+        select id,emp_name,sex,email,birthday,address from t_employee where emp_name like #{name}
+    </select>
+    <select id="QueryByname" resultMap="EmployeeResultMap">
+        select id,emp_name,sex,email,birthday,address from t_employee where emp_name like #{empName}
+    </select>
+    <select id="selectbyid" resultMap="EmployeeResultMap">
+        select emp.id, emp.sex,
+      		emp.emp_name ,emp.email,emp.dept_id,emp.birthday,emp.address,
+            dept.id as deptId,dept.dept_name as deptName
+        FROM
+            t_employee emp , t_dept dept
+        where emp.dept_id=dept.id and emp.id=#{id}
+    </select>
+
+</mapper>
